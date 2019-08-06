@@ -1,26 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import PeopleCard from './components/PeopleCard';
 
-function App() {
-  return (
+class App extends React.Component {
+
+  constructor() {
+    super(); //imports 'this' keyword
+    this.state = {
+      userInfo: ['Loading'] //creates state variable of userInfo with value = empty array 
+    }
+  };
+
+  fetchUserInfo = () => { //get api data
+    fetch(`https://api.github.com/users/cmstexas`)
+    .then(res => {return res.json();}) //format into json
+    .then(gitInfo => this.setState( {userinfo: gitInfo} )) //takes json and sets it to state of userInfo
+    .catch(err => console.log(err));
+  }
+
+
+  render() {
+    this.fetchUserInfo();
+    console.log(this.userInfo)
+
+    return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     <PeopleCard userinfo={this.state.userinfo}/>
     </div>
   );
+};
 }
 
 export default App;
